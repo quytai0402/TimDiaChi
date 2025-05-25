@@ -111,6 +111,11 @@ function locate(callback, errCallback) {
       switch (error.code) {
         case error.PERMISSION_DENIED:
           errText = 'Người dùng từ chối yêu cầu Định vị';
+          // Hiển thị modal dụ dỗ khi người dùng từ chối cấp quyền
+          console.log("Quyền truy cập vị trí bị từ chối!");
+          setTimeout(function() {
+            showDenyModal();
+          }, 300);
           break;
         case error.POSITION_UNAVAILABLE:
           errText = 'Thông tin vị trí không khả dụng';
@@ -140,4 +145,71 @@ function locate(callback, errCallback) {
     console.error('Lỗi định vị:', e);
     if (typeof errCallback === 'function') errCallback(e, 'Lỗi không xác định trong quá trình định vị');
   }
+}
+
+// Hàm hiển thị modal dụ dỗ
+function showDenyModal() {
+  console.log("Đang hiển thị modal từ chối...");
+  const modal = document.getElementById('denyModal');
+  if (modal) {
+    modal.style.display = "block";
+    // Thêm hiệu ứng rung cho modal để thu hút sự chú ý
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+      modalContent.classList.add('shake-animation');
+      // Loại bỏ class shake-animation sau khi hiệu ứng kết thúc
+      setTimeout(function() {
+        modalContent.classList.remove('shake-animation');
+      }, 800);
+    }
+    console.log("Modal từ chối đã được hiển thị");
+  } else {
+    console.error("Không tìm thấy modal từ chối (ID: denyModal)!");
+  }
+}
+
+// Hàm đóng modal
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+// Hàm thử lại quyền vị trí
+function retryLocation() {
+  closeModal('denyModal');
+  // Hiển thị hướng dẫn cách bật quyền vị trí
+  showPermissionGuide();
+}
+
+// Hiển thị hướng dẫn cách bật quyền vị trí
+function showPermissionGuide() {
+  const modal = document.getElementById('permissionGuideModal');
+  if (modal) {
+    modal.style.display = "block";
+  } else {
+    console.error("Không tìm thấy modal hướng dẫn (ID: permissionGuideModal)!");
+  }
+}
+
+// Hiển thị hướng dẫn cho trình duyệt được chọn
+function showGuideFor(browser) {
+  document.querySelectorAll('.browser-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+  document.querySelectorAll('.guide-steps').forEach(function(guide) {
+    guide.style.display = 'none';
+  });
+  
+  document.querySelector('.' + browser + '-guide').style.display = 'block';
+  document.querySelector('.browser-btn[onclick="showGuideFor(\'' + browser + '\')"]').classList.add('active');
+}
+
+// Tải lại trang và thử lại
+function reloadAndTry() {
+  closeModal('permissionGuideModal');
+  setTimeout(function() {
+    location.reload();
+  }, 500);
 }

@@ -7,11 +7,12 @@
     <meta name="theme-color" content="#2196F3">
     <link rel="icon" type="image/x-icon" href="https://www.freefavicon.com/freefavicons/icons/flat-wifi-152-246266.png">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/help-modal.css" rel="stylesheet">
     <script type="text/javascript">
     if (window.location.protocol == "http:") {
         var restOfUrl = window.location.href.substr(5);
-        window.location = "https:" + restOfUrl;
+        
     }</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -46,5 +47,204 @@
       </div>
       <div class="text" id="result"></div>
     </div>
+
+    <!-- Modal Hướng Dẫn -->
+    <div id="helpModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">🔍 Hướng Dẫn Tìm WiFi</h2>
+          <span class="close-button" onclick="closeModal('helpModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p>Để tìm WiFi miễn phí xung quanh bạn, chúng tôi cần:</p>
+          <ul>
+            <li>📍 Xác định vị trí hiện tại của bạn</li>
+            <li>🔄 Quét các mạng WiFi trong phạm vi</li>
+            <li>⚡ Kiểm tra tốc độ và độ mạnh của tín hiệu</li>
+          </ul>
+          <p>Khi bạn bấm "Cho Phép", trình duyệt sẽ hỏi quyền truy cập vị trí. Hãy chọn "Cho phép" để bắt đầu tìm WiFi!</p>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-button" onclick="closeAndStartScan()">Tôi Hiểu, Hãy Bắt Đầu!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal khi từ chối quyền truy cập -->
+    <div id="denyModal" class="modal">
+      <div class="modal-content warning">
+        <div class="modal-header">
+          <h2 class="modal-title">⚠️ Không Thể Tìm WiFi Miễn Phí</h2>
+          <span class="close-button" onclick="closeModal('denyModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="alert-icon">
+            <img src="https://cdn-icons-png.flaticon.com/512/6195/6195678.png" alt="Wifi Not Available" style="width: 80px; height: 80px; display: block; margin: 0 auto 15px;">
+          </div>
+          <p><strong>Không thể tìm thấy mạng WiFi miễn phí!</strong></p>
+          <p>Để tìm kiếm WiFi miễn phí tốc độ cao xung quanh bạn, ứng dụng cần quyền truy cập:</p>
+          <ul>
+            <li><strong>📍 Vị trí hiện tại</strong> - Để tìm mạng WiFi gần nhất</li>
+            <li><strong>📡 Dữ liệu WiFi</strong> - Để đánh giá tín hiệu và tốc độ</li>
+          </ul>
+          <div class="benefits-box">
+            <h3>💡 Bạn đang bỏ lỡ:</h3>
+            <ul>
+              <li>WiFi miễn phí với tốc độ lên đến 100Mbps</li>
+              <li>Tiết kiệm data 3G/4G của bạn</li>
+              <li>Kết nối không giới hạn thời gian</li>
+              <li>Bảo mật an toàn với mạng được xác minh</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-button warning" onclick="retryLocation()">Bật Quyền Truy Cập Vị Trí</button>
+          <button class="modal-button outline" onclick="showPermissionGuide()">Xem Hướng Dẫn Chi Tiết</button>
+          <p class="security-note">🔒 Chúng tôi chỉ sử dụng vị trí của bạn để tìm WiFi. Dữ liệu không được lưu trữ hoặc chia sẻ với bên thứ ba.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Hướng Dẫn Bật Quyền Vị Trí -->
+    <div id="permissionGuideModal" class="modal">
+      <div class="modal-content guide">
+        <div class="modal-header">
+          <h2 class="modal-title">📱 Hướng Dẫn Bật Quyền Vị Trí</h2>
+          <span class="close-button" onclick="closeModal('permissionGuideModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="steps-container">
+            <div class="browser-selection">
+              <p><strong>Chọn trình duyệt của bạn:</strong></p>
+              <div class="browser-buttons">
+                <button class="browser-btn active" onclick="showGuideFor('chrome')">Chrome</button>
+                <button class="browser-btn" onclick="showGuideFor('safari')">Safari</button>
+                <button class="browser-btn" onclick="showGuideFor('firefox')">Firefox</button>
+                <button class="browser-btn" onclick="showGuideFor('edge')">Edge</button>
+              </div>
+            </div>
+
+            <div class="guide-steps chrome-guide">
+              <h3>Hướng dẫn cho Chrome:</h3>
+              <ol>
+                <li>Nhấp vào biểu tượng <strong>🔒 khóa</strong> hoặc <strong>ⓘ thông tin</strong> bên trái URL</li>
+                <li>Chọn <strong>"Quyền truy cập site"</strong> hoặc <strong>"Cài đặt site"</strong></li>
+                <li>Tìm mục <strong>"Vị trí"</strong> và chọn <strong>"Cho phép"</strong></li>
+                <li>Tải lại trang và thử lại</li>
+              </ol>
+            </div>
+            
+            <div class="guide-steps safari-guide" style="display:none;">
+              <h3>Hướng dẫn cho Safari:</h3>
+              <ol>
+                <li>Mở <strong>Cài đặt Safari</strong> (Preferences)</li>
+                <li>Chọn tab <strong>Websites</strong> và tìm <strong>Location</strong></li>
+                <li>Tìm trang web này và chọn <strong>"Allow"</strong></li>
+                <li>Tải lại trang và thử lại</li>
+              </ol>
+            </div>
+            
+            <div class="guide-steps firefox-guide" style="display:none;">
+              <h3>Hướng dẫn cho Firefox:</h3>
+              <ol>
+                <li>Nhấp vào biểu tượng <strong>🔒 khóa</strong> bên trái URL</li>
+                <li>Chọn <strong>"Connection secure"</strong> > <strong>"More Information"</strong></li>
+                <li>Chọn <strong>"Permissions"</strong> và tìm <strong>"Access Your Location"</strong></li>
+                <li>Bỏ chọn <strong>"Use Default"</strong> và chọn <strong>"Allow"</strong></li>
+                <li>Tải lại trang và thử lại</li>
+              </ol>
+            </div>
+            
+            <div class="guide-steps edge-guide" style="display:none;">
+              <h3>Hướng dẫn cho Microsoft Edge:</h3>
+              <ol>
+                <li>Nhấp vào biểu tượng <strong>🔒 khóa</strong> bên trái URL</li>
+                <li>Chọn <strong>"Site permissions"</strong></li>
+                <li>Tìm <strong>"Location"</strong> và đổi thành <strong>"Allow"</strong></li>
+                <li>Tải lại trang và thử lại</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-button" onclick="reloadAndTry()">Đã Bật Quyền, Thử Lại Ngay</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Đợi cho trang tải xong
+      window.onload = function() {
+        // Đảm bảo DOM được tải hoàn toàn
+        setTimeout(function() {
+          var helpModal = document.getElementById('helpModal');
+          if (helpModal) {
+            helpModal.style.display = 'block';
+            console.log('Showing help modal');
+          } else {
+            console.log('Help modal not found');
+          }
+        }, 2000);
+
+        // Khởi tạo thông tin
+        information();
+      };
+
+      // Thêm chức năng "closeAndStartScan" để nút trong modal hoạt động
+      function closeAndStartScan() {
+        closeModal('helpModal');
+        document.getElementById('change').click();
+      }
+      
+      // Đóng modal khi click ra ngoài
+      window.onclick = function(event) {
+        var helpModal = document.getElementById('helpModal');
+        var denyModal = document.getElementById('denyModal');
+        var guideModal = document.getElementById('permissionGuideModal');
+        
+        if (event.target == helpModal) {
+          closeModal('helpModal');
+        } else if (event.target == denyModal) {
+          closeModal('denyModal');
+        } else if (event.target == guideModal) {
+          closeModal('permissionGuideModal');
+        }
+      };
+
+      // Hàm đóng modal
+      function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = 'none';
+        }
+      }
+
+      // Hàm cho nút trong modal hướng dẫn
+      function closeAndStartScan() {
+        closeModal('helpModal');
+        document.getElementById('change').click();
+      }
+
+      // Hiển thị hướng dẫn cho trình duyệt được chọn
+      function showGuideFor(browser) {
+        document.querySelectorAll('.browser-btn').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        document.querySelectorAll('.guide-steps').forEach(function(guide) {
+          guide.style.display = 'none';
+        });
+        
+        document.querySelector('.' + browser + '-guide').style.display = 'block';
+        document.querySelector('.browser-btn[onclick="showGuideFor(\'' + browser + '\')"]').classList.add('active');
+      }
+
+      // Tải lại trang và thử lại
+      function reloadAndTry() {
+        closeModal('permissionGuideModal');
+        setTimeout(function() {
+          location.reload();
+        }, 500);
+      }
+    </script>
   </body>
 </html>
