@@ -1,0 +1,132 @@
+:root {
+  --primary-color: #00c3ff;
+  --primary-dark: #0080ab;
+  --secondary-color: #1e2432;
+  --text-color: #ffffff;
+  --bg-color: #0a1019;
+  --bg-gradient: linear-gradient(to bottom, #0a1019, #1a2030);
+}
+
+html, body
+{
+  height: 100%;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+}
+body
+{
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-image: var(--bg-gradient);
+  color: var(--text-color);
+}
+h1
+{
+  font-family: 'Inter', sans-serif;
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  filter: drop-shadow(0px 0px 10px rgba(0, 195, 255, 0.8));
+  margin: auto;
+  position: fixed;
+  top: 10%;
+  left: 0%;
+  right: 0%;
+  font-size: 2.2em;
+  font-weight: 700;
+}
+h2
+{
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  filter: drop-shadow(0px 0px 8px rgba(0, 195, 255, 0.6));
+  margin: auto;
+  position: fixed;
+  top: 18%;
+  left: 0%;
+  right: 0%;
+  font-size: 1.3em;
+  font-weight: 400;
+}
+img
+{
+  position: fixed;
+  margin: auto;
+  left: 0%;
+  right: 0%;
+  top: 30%;
+  height: 40%;
+  filter: drop-shadow(0px 0px 8px white);
+  opacity: 50%;
+}
+.button
+{
+  background-color: rgba(0, 195, 255, 0.2);
+  border: 2px solid rgba(0, 195, 255, 0.8);
+  border-radius: 30px;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 16px 40px;
+  border-radius: 30px;
+  width: 240px;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 15%;
+  filter: drop-shadow(0px 0px 10px rgba(0, 195, 255, 0.6));
+  transition: all 0.3s ease;
+}
+.text
+{
+  font-family: 'Inter', sans-serif;
+  color: white;
+  text-align: center;
+  filter: drop-shadow(0px 0px 8px rgba(0, 195, 255, 0.6));
+  margin: auto;
+  position: fixed;
+  top: 5%;
+  left: 0%;
+  right: 0%;
+  z-index: 1;
+  font-size: 16px;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.earth
+{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 280px;
+  width: 280px;
+  background-image: url(worldmap.jpg);
+  box-shadow: 0 0 40px rgba(0, 195, 255, 0.5);
+  border-radius: 50%;
+  background-size: 700px;
+  animation: rotate 12s linear infinite;
+  box-shadow: 10px -10px 40px black inset, -10px 10px 40px black inset, -10px -10px 40px black inset;
+  filter: drop-shadow(0px 0px 20px rgba(0, 195, 255, 0.4));
+}
+
+@keyframes rotate
+{
+  0%{background-position: 0 0;}
+  100%{background-position: 700px 0;}
+}

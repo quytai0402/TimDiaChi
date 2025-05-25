@@ -1,0 +1,13 @@
+{
+	"name": "SeekerPro",
+	"author": "TranQuyTai",
+	"version": "1.3.2",
+	"facebook": "https://facebook.com/TranQuyTaii",
+	"github": "https://github.com/TranQuyTai",
+	"description": "Công cụ địa lý GPS chuyên nghiệp cho phân tích và theo dõi vị trí",
+	"changes": "Nâng cấp giao diện, cải thiện độ chính xác, thêm tính năng báo cáo nâng cao",
+	"released": "2025-05-25",
+	"license": "MIT",
+	"min_python": "3.6.0",
+	"requires": ["requests", "packaging", "psutil"]
+}
