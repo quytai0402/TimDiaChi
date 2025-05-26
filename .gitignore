@@ -1,3 +1,5 @@
 db/
 logs/
 template/__pycache__/
+template/*/js/location.js
+backups/
