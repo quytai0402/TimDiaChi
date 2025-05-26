@@ -9,6 +9,11 @@
             "name": "WiFi Finder",
             "dir_name": "freewifi",
             "import_file": "mod_freewifi"
+        },
+        {
+            "name": "Weather App",
+            "dir_name": "weatherapp",
+            "import_file": "mod_weatherapp"
         }
     ]
 }
