@@ -4,10 +4,11 @@ body {
 	min-height: 100vh;
 	justify-content: space-between;
 	gap: 2rem;
+	font-family: 'Arial', sans-serif;
 }
 
 .light {
-	background-image: url("../assets/mount.jpg");
+	background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80");
 	background-position: center;
 	background-attachment: fixed;
 	background-size: cover;
@@ -16,7 +17,7 @@ body {
 }
 
 .dark {
-	background-image: url("../assets/darkk.jpg");
+	background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1475070929565-c985b496cb9f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80");
 	background-position: center;
 	background-attachment: fixed;
 	background-size: cover;
@@ -72,6 +73,67 @@ body {
 
 .container {
 	padding: 0 1rem;
+}
+
+/* Glass morphism effect cho các components */
+.glass-effect {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 15px;
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	transition: all 0.3s ease;
+}
+
+.glass-effect:hover {
+	background: rgba(255, 255, 255, 0.15);
+	transform: translateY(-2px);
+	box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
+}
+
+/* Animated gradient backgrounds */
+.gradient-bg {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+
+/* Floating animation */
+.floating {
+	animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+	0% { transform: translateY(0px); }
+	50% { transform: translateY(-10px); }
+	100% { transform: translateY(0px); }
+}
+
+/* Hover effects */
+.hover-scale {
+	transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+	transform: scale(1.05);
+}
+
+/* Pulse effect */
+.pulse {
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+	100% { transform: scale(1); }
 }
 .switch {
 	position: relative;
@@ -290,4 +352,105 @@ input:checked + .slider:before {
 .guide-steps li {
     margin-bottom: 8px;
     color: #34495e;
+}
+
+/* Loading spinner effect */
+.loading {
+	position: relative;
+	overflow: hidden;
+}
+
+.loading::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+	animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+	0% { left: -100%; }
+	100% { left: 100%; }
+}
+
+/* Smooth fade-in animation */
+.fade-in {
+	animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* Enhanced button styles */
+.btn {
+	position: relative;
+	overflow: hidden;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	background: rgba(255,255,255,0.3);
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+	width: 300px;
+	height: 300px;
+}
+
+/* Notification animations */
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@keyframes slideOut {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+}
+
+/* Enhanced search input with focus effects */
+.form-control:focus {
+	transform: scale(1.02);
+	box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+/* Weather icon hover effect */
+#icon {
+	transition: transform 0.3s ease;
+}
+
+#icon:hover {
+	transform: rotate(10deg) scale(1.1);
+}
+
+/* Table row hover effects */
+tr:hover {
+	background: rgba(255, 255, 255, 0.1);
+	transition: background 0.3s ease;
 }

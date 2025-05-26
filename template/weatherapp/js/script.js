@@ -28,6 +28,62 @@ const input_text = document.getElementById('input_text');
 let userLatitude = null;
 let userLongitude = null;
 
+// Hàm chuyển đổi tên thứ sang tiếng Việt
+function getDayInVietnamese(dayIndex) {
+  const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+  return days[dayIndex];
+}
+
+// Hàm chuyển đổi tên tháng sang tiếng Việt
+function getMonthInVietnamese(monthIndex) {
+  const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+  return months[monthIndex];
+}
+
+// Hàm chuyển đổi trạng thái thời tiết sang tiếng Việt
+function getWeatherInVietnamese(weatherMain) {
+  const weatherTranslations = {
+    'Clear': 'Trời Quang',
+    'Clouds': 'Có Mây', 
+    'Rain': 'Mưa',
+    'Drizzle': 'Mưa Phùn',
+    'Thunderstorm': 'Dông Bão',
+    'Snow': 'Tuyết',
+    'Mist': 'Sương Mù',
+    'Fog': 'Sương Mù',
+    'Haze': 'Sương Mù Nhẹ',
+    'Dust': 'Bụi',
+    'Sand': 'Cát Bụi',
+    'Ash': 'Tro Bụi',
+    'Squall': 'Gió Giật',
+    'Tornado': 'Lốc Xoáy'
+  };
+  return weatherTranslations[weatherMain] || weatherMain;
+}
+
+// Hàm format ngày theo định dạng Việt Nam
+function formatVietnameseDateTime(timestamp, timezoneOffset) {
+  const date = new Date(new Date(timestamp * 1000 + timezoneOffset * 1000).getTime());
+  const dayName = getDayInVietnamese(date.getUTCDay());
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = getMonthInVietnamese(date.getUTCMonth());
+  const year = date.getUTCFullYear();
+  const hours = date.getUTCHours().toString().padStart(2, '0');
+  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+  
+  return `${dayName}, ${day} Tháng ${month} ${year} ${hours}:${minutes}`;
+}
+
+// Hàm format ngày ngắn cho forecast
+function formatVietnameseDateShort(timestamp, timezoneOffset) {
+  const date = new Date(new Date(timestamp * 1000 + timezoneOffset * 1000).getTime());
+  const dayName = getDayInVietnamese(date.getUTCDay());
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = getMonthInVietnamese(date.getUTCMonth());
+  
+  return `${dayName}, ${day}/${month}`;
+}
+
 // Thêm sự kiện click cho nút chuyển giao diện tối/sáng
 darkBtn.addEventListener("click", () => {
   if (darkBtn.checked) {
@@ -99,7 +155,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (typeof showDenyModal === 'function') {
               showDenyModal();
             } else {
-              alert("Vui lòng cấp quyền truy cập vị trí để xem thông tin thời tiết chính xác!");
+              alert("Vui lòng cấp quyền truy cập vị trí để xem thông tin thời tiết chính xác cho khu vực của bạn!");
             }
           }, 300);
         }
@@ -109,17 +165,103 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Hàm lấy tọa độ dựa trên tên thành phố
+// Hàm hiển thị loading state
+function showLoading(element) {
+  if (element) {
+    element.classList.add('loading');
+    element.textContent = 'Đang tải...';
+  }
+}
+
+// Hàm ẩn loading state  
+function hideLoading(element) {
+  if (element) {
+    element.classList.remove('loading');
+  }
+}
+
+// Hàm hiển thị thông báo lỗi
+function showError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-notification glass-effect';
+  errorDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  `;
+  errorDiv.textContent = message;
+  
+  document.body.appendChild(errorDiv);
+  
+  setTimeout(() => {
+    errorDiv.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => errorDiv.remove(), 300);
+  }, 3000);
+}
+
+// Hàm hiển thị thông báo thành công
+function showSuccess(message) {
+  const successDiv = document.createElement('div');
+  successDiv.className = 'success-notification glass-effect';
+  successDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  `;
+  successDiv.textContent = message;
+  
+  document.body.appendChild(successDiv);
+  
+  setTimeout(() => {
+    successDiv.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => successDiv.remove(), 300);
+  }, 2000);
+}
+
+// Cải tiến hàm getCoords với error handling
 async function getCoords(cityName) { 
-  const limit = 5; // Giới hạn số lượng thành phố trả về
+  const limit = 5;
   const pos = { latitude: 0, longitude: 0 };
-  const api_url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=${limit}&appid=${APIkey}` // Tạo URL API
-  await fetch(api_url).then(res => res.json()).then(data => {
+  const api_url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=${limit}&appid=${APIkey}`;
+  
+  try {
+    showLoading(loc);
+    const response = await fetch(api_url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data || data.length === 0) {
+      throw new Error('Không tìm thấy thành phố này');
+    }
+    
     pos.latitude = data[0].lat;
     pos.longitude = data[0].lon;
+    
+    showSuccess(`Đã tìm thấy: ${data[0].name}, ${data[0].country}`);
     return pos;
-  });
-  return pos;
+    
+  } catch (error) {
+    console.error('Lỗi khi tìm kiếm thành phố:', error);
+    showError('Không thể tìm thấy thành phố. Vui lòng thử lại!');
+    hideLoading(loc);
+    throw error;
+  }
 }
 
 // Sự kiện khi người dùng nhấn phím Enter trong ô tìm kiếm
@@ -190,8 +332,8 @@ async function updateDetails(lat, lon) {
       console.log("KHÔNG CÓ CẢNH BÁO THỜI TIẾT Ở KHU VỰC NÀY");
     }
     icon.src = `http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`;
-    dtInfo.innerText = new Date(new Date(1000 * data.current.dt + data.timezone_offset * 1000).getTime()).toUTCString().slice(0, 22);
-    stat.innerText = data.current.weather[0].main;
+    dtInfo.innerText = formatVietnameseDateTime(data.current.dt, data.timezone_offset);
+    stat.innerText = getWeatherInVietnamese(data.current.weather[0].main);
     humid.innerText = data.current.humidity + " %";
     temperature.innerText = Number(data.current.temp - 273.15).toFixed(0) + " \u00B0" + "c";
     feelsLike.innerText = Number(data.current.feels_like - 273.15).toFixed(1);
@@ -205,7 +347,7 @@ async function updateDetails(lat, lon) {
       let max = document.getElementById(`${index}`).getElementsByTagName("td")[0];
       let min = document.getElementById(`${index}`).getElementsByTagName("td")[1];
       weatherIcon.src = `http://openweathermap.org/img/wn/${data.daily[`${index}`].weather[0].icon}@2x.png`;
-      head.innerHTML = new Date(new Date(1000 * data.daily[index].dt + data.timezone_offset * 1000).getTime()).toUTCString().slice(0, 11);
+      head.innerHTML = formatVietnameseDateShort(data.daily[index].dt, data.timezone_offset);
       max.innerHTML = (data.daily[index].temp.max - 273.15).toFixed(1);
       min.innerHTML = (data.daily[index].temp.min - 273.15).toFixed(1);
     }
