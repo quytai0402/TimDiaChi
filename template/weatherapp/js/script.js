@@ -323,7 +323,27 @@ async function updateDetails(lat, lon) {
   const aqiAPI = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${APIkey}`;
   await fetch(geoAPI).then(res => res.json()).then(data => {
     console.log(data[0].name, data[0].country);
-    loc.innerHTML = `${data[0].name}, ${data[0].country}`;
+    const cityName = `${data[0].name}, ${data[0].country}`;
+    // Reference to the span element
+    const cityNameElement = loc.querySelector('span');
+    
+    // Apply fade-out effect
+    cityNameElement.style.opacity = '0';
+    
+    // Set the city name in the span element after a short delay
+    setTimeout(() => {
+      cityNameElement.innerText = cityName;
+      // Add title attribute for tooltip when hovering
+      cityNameElement.title = cityName;
+      // Add fade-in class
+      cityNameElement.classList.add('fade-in');
+      cityNameElement.style.opacity = '1';
+      
+      // Remove the animation class after it's done
+      setTimeout(() => {
+        cityNameElement.classList.remove('fade-in');
+      }, 500);
+    }, 100);
   });
   await fetch(weatherAPI).then(res => res.json()).then(data => {
     try {

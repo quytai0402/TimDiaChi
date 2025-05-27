@@ -29,6 +29,32 @@ body {
 	color: #ffd24c;
 }
 
+/* Weather layout styling */
+#details {
+	display: flex;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.weather-status {
+	flex: 0 1 auto;
+	max-width: 50%;
+}
+
+.weather-details {
+	flex: 0 1 auto;
+}
+
+/* City name responsive styling */
+#location span {
+	max-width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 @media screen and (max-width: 1000px) {
 	#status {
 		margin-left: auto;
@@ -52,7 +78,9 @@ body {
 		margin-top: 0px;
 		margin-right: auto;
 		margin-left: auto;
-		justify-content: space-evenly;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		justify-content: space-between;
 	}
 
 	#details table {
@@ -61,11 +89,15 @@ body {
 
 	#location span {
 		font-size: 1.1rem;
+		max-width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	#location {
 		width: 100%;
-		padding: 4px 4px 4px 4px;
+		padding: 4px;
 		display: flex;
 		justify-content: center;
 	}

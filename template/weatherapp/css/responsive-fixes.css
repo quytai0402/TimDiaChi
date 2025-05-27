@@ -1,0 +1,88 @@
+/* Additional responsive fixes for weatherapp */
+
+/* Fix for city name display */
+.location-container {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.city-name {
+    display: inline-block;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default; /* Show regular cursor to indicate info on hover */
+}
+
+/* Hover effect for long city names */
+.city-name:hover {
+    color: #ffd24c; /* Highlight color on hover */
+}
+
+/* Force horizontal layout for all screen sizes */
+#details {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.weather-status {
+    flex: 0 1 auto;
+    max-width: 55% !important;
+    min-width: 240px !important;
+}
+
+.weather-details {
+    flex: 0 1 auto;
+    min-width: 240px !important;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (min-width: 300px) and (max-width: 1200px) {
+    #temperature {
+        font-size: 3rem !important;
+    }
+    
+    #feels-like {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Adjust table padding for smaller screens */
+    .details-row-heading {
+        padding: 0.7rem 1rem !important;
+    }
+}
+
+/* Specifically target very small screens */
+@media (max-width: 640px) {
+    .city-name {
+        max-width: 180px;
+    }
+    
+    /* Smaller weather components */
+    #icon {
+        width: 60px !important;
+    }
+    
+    #temperature {
+        font-size: 2.5rem !important;
+    }
+    
+    #feels-like {
+        font-size: 1rem !important;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 420px) {
+    .city-name {
+        max-width: 140px;
+    }
+}

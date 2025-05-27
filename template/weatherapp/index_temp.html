@@ -15,6 +15,8 @@
     <meta property="og:type" content="website">
     <title>Dự Báo Thời Tiết - Weather App</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive-fixes.css">
+    <link rel="stylesheet" href="css/animations.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -24,9 +26,9 @@
     <div class="flex items-center justify-between pt-6 container mx-auto flex-wrap w-full gap-5">
         <div class="flex items-center gap-4">
             <!-- location -->
-            <div class="text-4xl text-yellow-50 flex gap-3 floating" id="location">
+            <div class="text-4xl text-yellow-50 flex gap-3 floating location-container" id="location">
                 <img class="w-6 min-w-[1.5rem]" src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="" srcset="">
-                <span><span>
+                <span title="" class="city-name"><span>
             </div>
             <label class="switch hover-scale">
                 <input type="checkbox" class="dark-btn">
@@ -55,9 +57,9 @@
         </div>
     </div>
 
-    <div class="container mx-auto flex justify-between flex-wrap gap-4" id="details">
+    <div class="container mx-auto flex flex-row justify-between flex-nowrap md:flex-nowrap gap-4" id="details">
         <div id="status"
-            class="mt-2 text-center max-w-max glass-effect text-white pt-1 pb-3 px-3 rounded-2xl flex h-fit hover-scale floating">
+            class="mt-2 text-center glass-effect text-white pt-1 pb-3 px-3 rounded-2xl flex h-fit hover-scale floating weather-status">
             <div class="flex flex-col">
                 <img id="icon" class="mx-auto w-24 float-left" src="http://openweathermap.org/img/wn/10d@2x.png"
                     alt="biểu-tượng-thời-tiết" srcset="">
@@ -69,7 +71,7 @@
                 <h2 class="text-2xl block text-center">Cảm Giác Nhiệt Độ <span id="feels-like">27</span>&degC</h2>
             </div>
         </div>
-        <div class="flex h-fit w-fit rounded-xl glass-effect border-solid border border-sky-500 text-white hover-scale">
+        <div class="flex h-fit w-fit rounded-xl glass-effect border-solid border border-sky-500 text-white hover-scale weather-details">
             <table class="w-fit">
                 <tr id="table" class="">
                     <th class="details-row-heading">Độ ẩm</th>
