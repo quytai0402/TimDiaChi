@@ -29,8 +29,8 @@ SeekerPro là công cụ địa lý GPS chuyên nghiệp dùng để phân tích
 ### Cài đặt tự động
 
 ```bash
-git clone https://github.com/TranQuyTai/TimViTri.git
-cd TimViTri
+git clone https://github.com/QuyTai0402/TimDiaChi.git
+cd TimDiaChi
 chmod +x install.sh
 bash install.sh
 ```
