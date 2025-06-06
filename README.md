@@ -116,6 +116,8 @@ Ngrok là một giải pháp tunneling phổ biến khác để truy cập máy 
 
 ## Tác giả
 
-- **TranQuyTai**
-- Facebook: [facebook.com/TranQuyTaii](https://facebook.com/TranQuyTaii)
-- GitHub: [github.com/TranQuyTai](https://github.com/TranQuyTai)
+- **thewhiteh4t**
+- GitHub: [github.com/thewhiteh4t](https://github.com/thewhiteh4t)
+
+## Phát triển bởi
+- **Tran QuyT Tai**
