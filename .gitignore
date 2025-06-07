@@ -1,5 +1,74 @@
-db/
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# SSH keys and secrets
+ssh_key/
+*.pem
+*.key
+config.ini
+
+# Test files
+*_test.html
+test_*.py
+tests/
+
+# Log files
+*.log
 logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Project specific
+db/
 template/__pycache__/
 template/*/js/location.js
 backups/

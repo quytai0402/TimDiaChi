@@ -21,8 +21,8 @@ debian_install() {
     pkgs="python3 python3-pip python3-requests python3-packaging python3-psutil php"
 
     install_cmd() {
-        echo -ne '$1\r'
-        sudo apt -y install $1 &>> "$ILOG"
+        echo -ne "$1\r"
+        sudo apt -y install $1 >> "$ILOG" 2>&1
         status_check $1
         echo -e '\n--------------------\n' >> "$ILOG"
     }
@@ -39,7 +39,7 @@ fedora_install() {
 
     install_cmd() {
         echo -ne "$1\r"
-        sudo dnf install $1 -y &>> "$ILOG"
+        sudo dnf install $1 -y >> "$ILOG" 2>&1
         status_check $1
         echo -e '\n--------------------\n' >> "$ILOG"
     }
@@ -57,14 +57,14 @@ termux_install() {
 
     install_cmd() {
         echo -ne "$1\r"
-        apt -y install $1 &>> "$ILOG"
+        apt -y install $1 >> "$ILOG" 2>&1
         status_check $1
         echo -e '\n--------------------\n' >> "$ILOG"
     }
 
     install_pip() {
         echo -ne "$1\r"
-        pip install -U $1 &>> "$ILOG"
+        pip install -U $1 >> "$ILOG" 2>&1
         status_check $1
         echo -e '\n--------------------\n' >> "$ILOG"
     }
@@ -83,7 +83,7 @@ arch_install() {
 
     install_cmd() {
         echo -ne "$1\r"
-        yes | sudo pacman -S $1 --needed &>> "$ILOG"
+        yes | sudo pacman -S $1 --needed >> "$ILOG" 2>&1
         status_check $1
         echo -e '\n--------------------\n' >> "$ILOG"
     }
@@ -95,9 +95,46 @@ arch_install() {
     done
 }
 
+macos_install() {
+    echo -e '===================\nINSTALLING FOR MACOS\n===================\n' > "$ILOG"
+
+    # Check if Homebrew is installed
+    if ! command -v brew &> /dev/null; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >> "$ILOG" 2>&1
+    fi
+
+    pkgs="python3 php"
+    pip_pkgs="requests packaging psutil"
+
+    install_cmd() {
+        echo -ne "$1\r"
+        brew install $1 >> "$ILOG" 2>&1
+        status_check $1
+        echo -e '\n--------------------\n' >> "$ILOG"
+    }
+
+    install_pip() {
+        echo -ne "$1\r"
+        pip3 install $1 >> "$ILOG" 2>&1
+        status_check $1
+        echo -e '\n--------------------\n' >> "$ILOG"
+    }
+
+    for pkg_name in $pkgs; do
+        install_cmd $pkg_name
+    done
+
+    for pkg_name in $pip_pkgs; do
+        install_pip $pkg_name
+    done
+}
+
 echo -e '[!] Installing Dependencies...\n'
 
-if [ -f '/etc/arch-release' ]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    macos_install
+elif [ -f '/etc/arch-release' ]; then
     arch_install
 elif [ -f '/etc/fedora-release' ]; then
     fedora_install

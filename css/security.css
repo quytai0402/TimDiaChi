@@ -1,0 +1,277 @@
+/* Security CSS - Bảo mật nâng cao cho website */
+
+/* Chặn selection và drag */
+* {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-appearance: none !important;
+}
+
+/* Cho phép selection cho input và textarea */
+input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}
+
+/* Ẩn scrollbar để khó debug */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+/* Firefox scrollbar */
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Chống inspect element bằng pointer events */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: transparent;
+}
+
+/* Che giấu source code trong CSS */
+html::before {
+    content: "<!-- Security: This website is protected against viewing source code -->";
+    display: none;
+}
+
+/* Prevent drag and drop */
+* {
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+}
+
+/* Prevent text highlight */
+::selection {
+    background: transparent !important;
+}
+
+::-moz-selection {
+    background: transparent !important;
+}
+
+/* Disable print media */
+@media print {
+    * {
+        display: none !important;
+    }
+    
+    body::before {
+        content: "Printing is disabled for security reasons.";
+        display: block !important;
+        font-size: 24px;
+        text-align: center;
+        margin-top: 50px;
+        color: #333;
+    }
+}
+
+/* Security animations */
+@keyframes securityPulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+.security-protected {
+    animation: securityPulse 2s infinite;
+}
+
+/* Disable context menu styling */
+.no-context-menu {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Watermark bảo mật (tùy chọn) */
+body::after {
+    content: "Protected Content";
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    color: rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 999999;
+    display: none; /* Ẩn mặc định */
+}
+
+/* Mobile security enhancements */
+@media (max-width: 768px) {
+    /* Disable zoom */
+    * {
+        touch-action: pan-x pan-y !important;
+    }
+    
+    /* Disable long press */
+    * {
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+    }
+}
+
+/* Developer tools detection styles */
+.devtools-blur {
+    filter: blur(10px) !important;
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+.security-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.security-message {
+    background: white !important;
+    padding: 30px !important;
+    border-radius: 15px !important;
+    text-align: center !important;
+    max-width: 400px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Disable common developer shortcuts visually */
+.shortcut-disabled {
+    position: relative;
+}
+
+.shortcut-disabled::before {
+    content: "🚫";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    color: red;
+    z-index: 999999;
+    display: none;
+    animation: flash 0.5s;
+}
+
+@keyframes flash {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Noise effect để làm khó đọc source */
+.security-noise::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000" fill-opacity="0.01"/></svg>');
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Hiệu ứng cảnh báo */
+.security-warning-effect {
+    animation: securityShake 0.5s ease-in-out;
+}
+
+@keyframes securityShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Style cho thông báo bảo mật */
+.security-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 999999;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    animation: slideInRight 0.3s ease;
+    max-width: 300px;
+    word-wrap: break-word;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Dark mode security enhancements */
+@media (prefers-color-scheme: dark) {
+    .security-overlay {
+        background: rgba(0, 0, 0, 0.98) !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .security-notification {
+        background: #000 !important;
+        color: #fff !important;
+        border: 3px solid #fff !important;
+    }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .security-notification,
+    .security-warning-effect,
+    .securityPulse {
+        animation: none !important;
+    }
+}

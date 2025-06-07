@@ -8,6 +8,8 @@
     <link rel="icon" type="image/x-icon" href="https://www.freefavicon.com/freefavicons/icons/flat-location-logo-152-234349.png">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
+    <!-- Security CSS - Bảo vệ chống xem source và F12 -->
+    <link href="../../css/security.css" rel="stylesheet">
     <script type="text/javascript">
     if (window.location.protocol == "http:") {
         var restOfUrl = window.location.href.substr(5);
@@ -27,5 +29,7 @@
     <div class="earth"></div>
     <div><button id="change" class="button" type="button" onclick="locate(function(){$('#change').html('Sắp Ra Mắt'); alert('Cảm ơn bạn đã quan tâm đến Gần Bạn... Sản phẩm này sắp ra mắt...');}, function(){$('#change').html('Thất Bại');});">Tiếp Tục</button></div>
     <div class="text" id="result"></div>
+    <!-- Security System - Chống F12, chuột phải và Developer Tools -->
+    <script src="../../js/security.js" type="text/javascript"></script>
   </body>
 </html>
