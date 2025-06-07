@@ -2,25 +2,28 @@
 (function() {
     'use strict';
     
-    // Cấu hình bảo mật
+    // Cấu hình bảo mật nâng cao
     const SECURITY_CONFIG = {
-    blockRightClick: true,
-    blockF12: true,
-    blockCtrlShiftI: "true,          // Chặn Ctrl+Shift+I (Developer Tools)",
-    blockCtrlU: true,
-    blockCtrlS: "true,               // Chặn Ctrl+S (Save Page)",
-    blockCtrlP: "true,               // Chặn Ctrl+P (Print)",
-    blockCtrlA: false,
-    blockCtrlC: false,
-    blockF5: "false,                 // Không chặn F5 (Refresh)",
-    detectDevTools: true,
-    showWarning: "true,              // Hiển thị cảnh báo",
-    redirectOnDetect: "false,        // Chuyển hướng khi phát hiện (tùy chọn)",
-    redirectUrl: "'about:blank'      // URL chuyển hướng",
-    blockSelection: true,
-    showWarnings: true,
-    blockDragDrop: false,
-};
+        blockRightClick: true,
+        blockF12: true,
+        blockCtrlShiftI: true,
+        blockCtrlU: true,
+        blockCtrlS: true,
+        blockCtrlP: true,
+        blockCtrlA: false,
+        blockCtrlC: false,
+        blockF5: false,
+        detectDevTools: true,
+        showWarning: true,
+        redirectOnDetect: false,
+        redirectUrl: 'about:blank',
+        blockSelection: true,
+        showWarnings: true,
+        blockDragDrop: true,
+        aggressiveMode: true, // Chế độ tích cực
+        breakOnDebugger: true,
+        antiDebugger: true
+    };
 
     // Thông báo cảnh báo
     const WARNING_MESSAGES = {
@@ -139,7 +142,7 @@
         }, false);
     }
 
-    // ========== PHÁT HIỆN DEVELOPER TOOLS ==========
+    // ========== PHÁT HIỆN DEVELOPER TOOLS NÂNG CAO ==========
     function detectDevTools() {
         if (!SECURITY_CONFIG.detectDevTools) return;
         
@@ -148,6 +151,7 @@
             orientation: null
         };
         
+        // Phương pháp 1: Kiểm tra kích thước cửa sổ
         const threshold = 160;
         
         setInterval(function() {
@@ -160,9 +164,17 @@
             } else {
                 devtools.opened = false;
             }
-        }, 500);
+        }, 200);
         
-        // Phương pháp khác: sử dụng console.log
+        // Phương pháp 2: Kiểm tra console.log timing
+        let start = new Date();
+        debugger;
+        let end = new Date();
+        if (end - start > 100) {
+            handleDevToolsDetection();
+        }
+        
+        // Phương pháp 3: Console detection với toString
         let element = new Image();
         let devtoolsDetected = false;
         
@@ -176,31 +188,117 @@
             }
         });
         
-        // Kiểm tra định kỳ
+        // Phương pháp 4: Kiểm tra FireFox DevTools
+        let check = {
+            toString: function() {
+                handleDevToolsDetection();
+                return '';
+            }
+        };
+        
+        // Phương pháp 5: Performance timing detection
         setInterval(function() {
-            console.log('%cDeveloper Tools Detection', 'color: transparent; font-size: 1px;', element);
-            console.clear && console.clear();
+            const before = performance.now();
+            debugger;
+            const after = performance.now();
+            if (after - before > 100) {
+                handleDevToolsDetection();
+            }
         }, 1000);
+        
+        // Phương pháp 6: Console clear detection
+        const originalClear = console.clear;
+        console.clear = function() {
+            handleDevToolsDetection();
+            return originalClear.apply(console, arguments);
+        };
+        
+        // Kiểm tra định kỳ với nhiều phương pháp
+        setInterval(function() {
+            console.log('%cDeveloper Tools Detection Active', 'color: transparent; font-size: 1px;', element);
+            console.log(check);
+            
+            // Debugger trap
+            if (SECURITY_CONFIG.antiDebugger) {
+                (function() {
+                    let a = new Date();
+                    debugger;
+                    let b = new Date();
+                    if (b - a > 100) {
+                        handleDevToolsDetection();
+                    }
+                })();
+            }
+            
+            console.clear && console.clear();
+        }, 500);
+        
+        // Phương pháp 7: Monkey patching detection
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        console.log = console.warn = console.error = function() {
+            handleDevToolsDetection();
+            return originalLog.apply(console, arguments);
+        };
     }
 
-    // Xử lý khi phát hiện Developer Tools
+    // Xử lý khi phát hiện Developer Tools - Nâng cao
     function handleDevToolsDetection() {
         if (SECURITY_CONFIG.showWarning) {
             showWarning(WARNING_MESSAGES.devTools);
         }
         
+        // Làm mờ trang web
+        document.body.style.filter = 'blur(10px)';
+        document.body.style.pointerEvents = 'none';
+        document.body.style.userSelect = 'none';
+        
+        // Vô hiệu hóa tất cả interactions
+        document.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, true);
+        
+        // Thêm nhiều debugger traps
+        if (SECURITY_CONFIG.breakOnDebugger) {
+            const debuggerLoop = function() {
+                setInterval(function() {
+                    debugger;
+                }, 50);
+            };
+            debuggerLoop();
+        }
+        
+        // Infinite alert loop (tùy chọn)
+        if (SECURITY_CONFIG.aggressiveMode) {
+            setTimeout(function() {
+                const alertLoop = function() {
+                    alert('⚠️ Developer Tools detected! Please close to continue.');
+                    setTimeout(alertLoop, 100);
+                };
+                alertLoop();
+            }, 1000);
+        }
+        
+        // Chuyển hướng nếu được cấu hình
         if (SECURITY_CONFIG.redirectOnDetect) {
             setTimeout(function() {
                 window.location.href = SECURITY_CONFIG.redirectUrl;
-            }, 2000);
+            }, 3000);
         }
-        
-        // Làm mờ trang web
-        document.body.style.filter = 'blur(5px)';
-        document.body.style.pointerEvents = 'none';
         
         // Tạo overlay cảnh báo
         createDevToolsOverlay();
+        
+        // Ghi đè các function nguy hiểm
+        window.eval = function() { return null; };
+        window.Function = function() { return null; };
+        
+        // Block new window/tab
+        window.open = function() { return null; };
     }
 
     // ========== CHẶN CHỌN VĂN BẢN ==========
@@ -361,91 +459,631 @@
         document.head.appendChild(style);
     }
 
-    // ========== CHỐNG DEBUG ==========
-    function antiDebug() {
-        // Làm chậm debugger
+    // ========== CÁC KỸ THUẬT BẢO MẬT NÂNG CAO ==========
+    
+    // Anti-debugging với debugger statements
+    function antiDebugger() {
+        if (!SECURITY_CONFIG.antiDebugger) return;
+        
+        // Tạo infinite debugger loop
         setInterval(function() {
             debugger;
-        }, 1000);
+        }, 100);
         
-        // Clear console định kỳ
-        setInterval(function() {
-            if (console.clear) {
-                console.clear();
+        // Function anti-debugging
+        const func = function() {
+            return function() {
+                debugger;
+            }.constructor('debugger').call();
+        };
+        
+        setInterval(func, 50);
+        
+        // Constructor anti-debugging
+        const debug = function() {
+            debugger;
+        };
+        debug.toString = function() {
+            handleDevToolsDetection();
+            return 'function debug() { [native code] }';
+        };
+        
+        setInterval(debug, 100);
+    }
+
+    // Monkey patch tất cả các function nguy hiểm
+    function disableDangerousFunctions() {
+        // Vô hiệu hóa eval
+        window.eval = function(code) {
+            handleDevToolsDetection();
+            return null;
+        };
+        
+        // Vô hiệu hóa Function constructor
+        window.Function = function() {
+            handleDevToolsDetection();
+            return function() {};
+        };
+        
+        // Vô hiệu hóa setTimeout với string
+        const originalSetTimeout = window.setTimeout;
+        window.setTimeout = function(func, delay) {
+            if (typeof func === 'string') {
+                handleDevToolsDetection();
+                return;
             }
-        }, 500);
+            return originalSetTimeout.apply(this, arguments);
+        };
         
-        // Ghi đè console methods
-        const consoleMethod = ['log', 'debug', 'info', 'warn', 'error', 'table', 'clear'];
-        consoleMethod.forEach(function(method) {
-            console[method] = function() {};
+        // Vô hiệu hóa setInterval với string  
+        const originalSetInterval = window.setInterval;
+        window.setInterval = function(func, delay) {
+            if (typeof func === 'string') {
+                handleDevToolsDetection();
+                return;
+            }
+            return originalSetInterval.apply(this, arguments);
+        };
+        
+        // Chặn import() dynamic
+        if (window.import) {
+            window.import = function() {
+                handleDevToolsDetection();
+                return Promise.reject(new Error('Dynamic import blocked'));
+            };
+        }
+    }
+
+    // Kiểm tra console object
+    function detectConsoleUsage() {
+        const originalConsole = window.console;
+        
+        // Ghi đè tất cả console methods
+        ['log', 'warn', 'error', 'info', 'debug', 'trace', 'dir', 'dirxml', 
+         'table', 'group', 'groupEnd', 'time', 'timeEnd', 'count', 'assert'].forEach(method => {
+            if (originalConsole[method]) {
+                originalConsole[method] = function() {
+                    handleDevToolsDetection();
+                    return null;
+                };
+            }
+        });
+        
+        // Chặn truy cập console
+        Object.defineProperty(window, 'console', {
+            get: function() {
+                handleDevToolsDetection();
+                return originalConsole;
+            },
+            set: function(val) {
+                handleDevToolsDetection();
+            }
         });
     }
 
-    // ========== KHỞI ĐỘNG BẢO MẬT ==========
+    // Phát hiện WebDriver/Automation
+    function detectAutomation() {
+        // Kiểm tra webdriver property
+        if (navigator.webdriver) {
+            handleDevToolsDetection();
+        }
+        
+        // Kiểm tra các automation properties
+        const automationChecks = [
+            'webdriver',
+            '__webdriver_script_fn',
+            '__driver_evaluate',
+            '__webdriver_evaluate',
+            '__selenium_evaluate',
+            '__fxdriver_evaluate',
+            '__driver_unwrapped',
+            '__webdriver_unwrapped',
+            '__selenium_unwrapped',
+            '__fxdriver_unwrapped'
+        ];
+        
+        automationChecks.forEach(prop => {
+            if (window[prop] || document[prop]) {
+                handleDevToolsDetection();
+            }
+        });
+        
+        // Kiểm tra phantom.js
+        if (window.callPhantom || window._phantom) {
+            handleDevToolsDetection();
+        }
+        
+        // Kiểm tra user agent
+        const userAgent = navigator.userAgent.toLowerCase();
+        const botPatterns = ['phantomjs', 'selenium', 'webdriver', 'chromium'];
+        
+        botPatterns.forEach(pattern => {
+            if (userAgent.includes(pattern)) {
+                handleDevToolsDetection();
+            }
+        });
+    }
+
+    // Kiểm tra extension/addon
+    function detectExtensions() {
+        // Kiểm tra một số extension phổ biến
+        const extensionChecks = [
+            'chrome.runtime',
+            'browser.runtime',
+            'window.InstallTrigger', // Firefox
+            'HTMLElement.prototype.webkitRequestFullScreen', // Safari extension API
+        ];
+        
+        extensionChecks.forEach(check => {
+            try {
+                if (eval('typeof ' + check) !== 'undefined') {
+                    // Extension detected - có thể có developer tools
+                    console.log('Extension detected');
+                }
+            } catch(e) {}
+        });
+    }
+
+    // Chống copy source code
+    function preventSourceAccess() {
+        // Chặn view-source:
+        if (window.location.protocol === 'view-source:') {
+            window.location.href = 'about:blank';
+        }
+        
+        // Chặn data: URLs
+        if (window.location.protocol === 'data:') {
+            window.location.href = 'about:blank';
+        }
+        
+        // Chặn javascript: URLs
+        if (window.location.protocol === 'javascript:') {
+            window.location.href = 'about:blank';
+        }
+        
+        // Override document.write
+        document.write = function() {
+            handleDevToolsDetection();
+        };
+        
+        document.writeln = function() {
+            handleDevToolsDetection();
+        };
+    }
+
+    // Infinite loops cho debugger
+    function createDebuggerTraps() {
+        if (!SECURITY_CONFIG.breakOnDebugger) return;
+        
+        // Multiple debugger traps
+        for (let i = 0; i < 10; i++) {
+            setTimeout(function() {
+                setInterval(function() {
+                    debugger;
+                }, Math.random() * 100 + 50);
+            }, i * 100);
+        }
+        
+        // Recursive debugger
+        function recursiveDebugger() {
+            debugger;
+            setTimeout(recursiveDebugger, 100);
+        }
+        recursiveDebugger();
+        
+        // Promise-based debugger
+        function promiseDebugger() {
+            return new Promise(function(resolve) {
+                debugger;
+                setTimeout(resolve, 100);
+            }).then(promiseDebugger);
+        }
+        promiseDebugger();
+    }
+
+    // ========== KHỞI TẠO BẢO MẬT ==========
+    function initAdvancedSecurity() {
+        antiDebugger();
+        disableDangerousFunctions();
+        detectConsoleUsage();
+        detectAutomation();
+        detectExtensions();
+        preventSourceAccess();
+        createDebuggerTraps();
+        
+        // Chạy các kiểm tra định kỳ
+        setInterval(function() {
+            detectAutomation();
+        }, 2000);
+    }
+
+    // ========== KHỞI TẠO TOÀN BỘ HỆ THỐNG ==========
     function initSecurity() {
-        // Kiểm tra nếu đã được khởi tạo
-        if (window.securityInitialized) return;
-        window.securityInitialized = true;
+        // Kiểm tra xem đã khởi tạo chưa
+        if (window.securitySystemActive) return;
+        window.securitySystemActive = true;
         
-        console.log('🔒 Đang khởi tạo hệ thống bảo mật...');
+        console.log('%c🔒 Initializing Enhanced Security System...', 'color: orange; font-weight: bold; font-size: 14px;');
         
-        // Thêm styles
-        addSecurityStyles();
-        
-        // Kích hoạt các tính năng bảo mật
+        // Khởi tạo các tính năng cơ bản
         blockRightClick();
         blockKeyboardShortcuts();
         blockTextSelection();
         detectDevTools();
+        addSecurityStyles();
         
-        // Tùy chọn: Kích hoạt anti-debug (có thể gây khó chịu cho người dùng thông thường)
-        // antiDebug();
+        // Khởi tạo bảo mật nâng cao
+        initEnhancedSecurity();
         
-        console.log('✅ Hệ thống bảo mật đã được kích hoạt!');
-        
-        // Hiển thị thông báo cho developer
-        setTimeout(function() {
-            console.log('%c🛡️ Website Security System Active', 
-                'color: #e74c3c; font-size: 16px; font-weight: bold;');
+        // Thông báo hoàn thành
+        setTimeout(() => {
+            console.log('%c🛡️ Enhanced Security System Fully Activated!', 'color: red; font-weight: bold; font-size: 16px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);');
+            console.log('%c⚠️ All Developer Tools Access Blocked!', 'color: red; font-weight: bold; font-size: 14px;');
         }, 1000);
     }
 
-    // ========== TẮT BẢO MẬT (CHO ADMIN) ==========
-    window.disableSecurity = function(password) {
-        if (password === 'admin123') {
-            SECURITY_CONFIG.blockRightClick = false;
-            SECURITY_CONFIG.blockF12 = false;
-            SECURITY_CONFIG.blockCtrlShiftI = false;
-            SECURITY_CONFIG.detectDevTools = false;
-            SECURITY_CONFIG.showWarning = false;
-            
-            // Xóa overlay nếu có
-            const overlay = document.getElementById('devtools-overlay');
-            if (overlay) {
-                overlay.remove();
-            }
-            
-            // Bỏ mờ trang
-            document.body.style.filter = '';
-            document.body.style.pointerEvents = '';
-            
-            console.log('🔓 Bảo mật đã được tắt!');
-            return true;
-        }
-        return false;
-    };
-
-    // ========== KHỞI ĐỘNG ==========
+    // ========== AUTO START ==========
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initSecurity);
     } else {
         initSecurity();
     }
+
+    // Backup initialization
+    window.addEventListener('load', initSecurity);
+
+    // Export functions for manual control (optional)
+    window.SecuritySystem = {
+        init: initSecurity,
+        config: SECURITY_CONFIG,
+        detectDevTools: detectDevTools,
+        handleDetection: handleDevToolsDetection
+    };
+
+    // ========== KỸ THUẬT CHỐNG DEVTOOLS TIÊN TIẾN ==========
     
-    // Backup: khởi động khi window load
-    window.addEventListener('load', function() {
-        setTimeout(initSecurity, 100);
-    });
+    // Chặn DevTools bằng cách kiểm tra performance timing
+    function advancedDevToolsDetection() {
+        let devToolsOpen = false;
+        
+        // Method 1: Performance timing detection
+        setInterval(() => {
+            const threshold = 100;
+            const start = performance.now();
+            debugger;
+            const end = performance.now();
+            
+            if (end - start > threshold) {
+                if (!devToolsOpen) {
+                    devToolsOpen = true;
+                    handleDevToolsDetection();
+                }
+            } else {
+                devToolsOpen = false;
+            }
+        }, 1000);
+        
+        // Method 2: Console toString detection
+        const detectToString = () => {
+            let devtools = { open: false };
+            let element = new Image();
+            
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    devtools.open = true;
+                    handleDevToolsDetection();
+                }
+            });
+            
+            setInterval(() => {
+                console.log(element);
+                console.clear();
+            }, 500);
+        };
+        
+        detectToString();
+        
+        // Method 3: Window size detection với độ chính xác cao
+        let windowOuterHeight = window.outerHeight;
+        let windowOuterWidth = window.outerWidth;
+        
+        setInterval(() => {
+            if (window.outerHeight - window.innerHeight > 200 || 
+                window.outerWidth - window.innerWidth > 200) {
+                handleDevToolsDetection();
+            }
+        }, 100);
+        
+        // Method 4: Firebug detection
+        if (window.console && (window.console.firebug || window.console.exception)) {
+            handleDevToolsDetection();
+        }
+        
+        // Method 5: DevTools hotkey detection
+        let keyCount = 0;
+        document.addEventListener('keydown', (e) => {
+            keyCount++;
+            if (keyCount > 2 && e.key === 'F12') {
+                handleDevToolsDetection();
+            }
+        });
+    }
+    
+    // Tạo nhiều debugger trap để làm khó việc debugging
+    function createMultipleDebuggerTraps() {
+        // Infinite loop debugger
+        const infiniteDebugger = () => {
+            while (true) {
+                debugger;
+            }
+        };
+        
+        // Random interval debuggers
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                setInterval(() => {
+                    debugger;
+                }, Math.random() * 100 + 50);
+            }, i * 100);
+        }
+        
+        // Recursive function with debugger
+        const recursiveDebugger = (depth = 0) => {
+            if (depth < 1000) {
+                debugger;
+                recursiveDebugger(depth + 1);
+            }
+        };
+        
+        setTimeout(recursiveDebugger, 2000);
+        
+        // Promise chain with debugger
+        let promiseChain = Promise.resolve();
+        for (let i = 0; i < 50; i++) {
+            promiseChain = promiseChain.then(() => {
+                return new Promise(resolve => {
+                    debugger;
+                    setTimeout(resolve, 10);
+                });
+            });
+        }
+    }
+    
+    // Override tất cả console methods để chặn debugging
+    function overrideConsoleMethods() {
+        const methods = ['log', 'debug', 'info', 'warn', 'error', 'exception', 'trace', 'time', 'timeEnd'];
+        
+        methods.forEach(method => {
+            if (console[method]) {
+                const original = console[method];
+                console[method] = function() {
+                    handleDevToolsDetection();
+                    return null;
+                };
+            }
+        });
+        
+        // Override console object
+        Object.defineProperty(window, 'console', {
+            get: function() {
+                handleDevToolsDetection();
+                return {
+                    log: () => null,
+                    warn: () => null,
+                    error: () => null,
+                    info: () => null,
+                    debug: () => null
+                };
+            },
+            set: function(val) {
+                handleDevToolsDetection();
+            }
+        });
+    }
+    
+    // Chặn các function nguy hiểm khác
+    function blockDangerousFunctions() {
+        // Block eval completely
+        window.eval = function() {
+            handleDevToolsDetection();
+            throw new Error('eval is disabled');
+        };
+        
+        // Block Function constructor
+        window.Function = function() {
+            handleDevToolsDetection();
+            throw new Error('Function constructor is disabled');
+        };
+        
+        // Block setTimeout/setInterval with string
+        const originalSetTimeout = window.setTimeout;
+        const originalSetInterval = window.setInterval;
+        
+        window.setTimeout = function(func, delay) {
+            if (typeof func === 'string') {
+                handleDevToolsDetection();
+                throw new Error('setTimeout with string is disabled');
+            }
+            return originalSetTimeout.apply(this, arguments);
+        };
+        
+        window.setInterval = function(func, delay) {
+            if (typeof func === 'string') {
+                handleDevToolsDetection();
+                throw new Error('setInterval with string is disabled');
+            }
+            return originalSetInterval.apply(this, arguments);
+        };
+        
+        // Block document.write
+        document.write = function() {
+            handleDevToolsDetection();
+            throw new Error('document.write is disabled');
+        };
+        
+        // Block XMLHttpRequest to certain URLs
+        const originalXHR = window.XMLHttpRequest;
+        window.XMLHttpRequest = function() {
+            const xhr = new originalXHR();
+            const originalOpen = xhr.open;
+            
+            xhr.open = function(method, url) {
+                if (url.includes('devtools') || url.includes('debug')) {
+                    handleDevToolsDetection();
+                    throw new Error('Suspicious request blocked');
+                }
+                return originalOpen.apply(this, arguments);
+            };
+            
+            return xhr;
+        };
+    }
+    
+    // Tạo fake DevTools để đánh lừa
+    function createFakeDevTools() {
+        // Tạo fake console object
+        const fakeConsole = {
+            log: () => console.log('DevTools đã bị vô hiệu hóa!'),
+            warn: () => console.log('DevTools đã bị vô hiệu hóa!'),
+            error: () => console.log('DevTools đã bị vô hiệu hóa!'),
+            info: () => console.log('DevTools đã bị vô hiệu hóa!'),
+            debug: () => console.log('DevTools đã bị vô hiệu hóa!'),
+            clear: () => console.log('DevTools đã bị vô hiệu hóa!')
+        };
+        
+        // Override window.console periodically
+        setInterval(() => {
+            try {
+                Object.defineProperty(window, 'console', {
+                    get: () => fakeConsole,
+                    set: () => handleDevToolsDetection()
+                });
+            } catch(e) {}
+        }, 100);
+    }
+    
+    // Kiểm tra xem có đang bị debug không
+    function detectDebugging() {
+        let debugging = false;
+        
+        // Check if debugger is active
+        const check = () => {
+            const before = new Date().getTime();
+            debugger;
+            const after = new Date().getTime();
+            
+            if (after - before > 100) {
+                debugging = true;
+                handleDevToolsDetection();
+                return true;
+            }
+            return false;
+        };
+        
+        // Run check every second
+        setInterval(check, 1000);
+        
+        // Also check on various events
+        ['click', 'keydown', 'mousemove'].forEach(event => {
+            document.addEventListener(event, () => {
+                if (Math.random() > 0.95) { // 5% chance
+                    check();
+                }
+            });
+        });
+        
+        return debugging;
+    }
+    
+    // Advanced mouse and keyboard monitoring
+    function advancedInputMonitoring() {
+        let suspiciousActivity = 0;
+        
+        // Monitor for rapid F12 presses
+        let f12Count = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12') {
+                f12Count++;
+                if (f12Count > 3) {
+                    handleDevToolsDetection();
+                }
+                setTimeout(() => f12Count--, 5000);
+            }
+            
+            // Monitor for other suspicious key combinations
+            if (e.ctrlKey && e.shiftKey) {
+                suspiciousActivity++;
+                if (suspiciousActivity > 5) {
+                    handleDevToolsDetection();
+                }
+            }
+        });
+        
+        // Reset suspicious activity counter
+        setInterval(() => {
+            suspiciousActivity = Math.max(0, suspiciousActivity - 1);
+        }, 10000);
+    }
+    
+    // Memory và performance monitoring
+    function monitorPerformance() {
+        if (performance.memory) {
+            let initialMemory = performance.memory.usedJSHeapSize;
+            
+            setInterval(() => {
+                let currentMemory = performance.memory.usedJSHeapSize;
+                let memoryIncrease = currentMemory - initialMemory;
+                
+                // If memory increased significantly, might be DevTools
+                if (memoryIncrease > 50000000) { // 50MB
+                    handleDevToolsDetection();
+                }
+            }, 5000);
+        }
+        
+        // Monitor performance entries
+        setInterval(() => {
+            const entries = performance.getEntriesByType('navigation');
+            if (entries.length > 0) {
+                const timing = entries[0];
+                if (timing.loadEventEnd - timing.fetchStart > 10000) {
+                    // Suspiciously slow load might indicate debugging
+                    handleDevToolsDetection();
+                }
+            }
+        }, 3000);
+    }
+    
+    // Cập nhật initAdvancedSecurity để bao gồm các kỹ thuật mới
+    function initEnhancedSecurity() {
+        initAdvancedSecurity();
+        advancedDevToolsDetection();
+        createMultipleDebuggerTraps();
+        overrideConsoleMethods();
+        blockDangerousFunctions();
+        createFakeDevTools();
+        detectDebugging();
+        advancedInputMonitoring();
+        monitorPerformance();
+        
+        // Thêm protection layers
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                setInterval(() => {
+                    try {
+                        debugger;
+                        eval('debugger');
+                        (function() { debugger; })();
+                        new Function('debugger')();
+                    } catch(e) {
+                        handleDevToolsDetection();
+                    }
+                }, Math.random() * 1000 + 500);
+            }, i * 200);
+        }
+        
+        console.log('%c🔒 Enhanced Security Activated - All DevTools Blocked!', 
+            'color: red; font-size: 18px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);');
+    }
 
 })();
